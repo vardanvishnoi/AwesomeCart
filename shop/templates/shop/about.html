@@ -1,0 +1,91 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %} AboutUs {% endblock %}
+{% block css %}
+.var{
+  height:140px;
+  width:140px;
+  border-radius:50%;
+  margin-left:110px;
+}
+h2{
+  text-align:center;
+}
+p{
+  text-align:justify;
+}
+#about{
+  color:white;
+}
+ {% endblock %}
+ {% block userimage %}
+<img id="loginicon" src="/media/{{img}}">
+{% endblock %}
+ 
+{% block body %}
+
+<div class="jumbotron">
+  <div class="container">
+    <h1 class="display-3">Awesome Cart</h1>
+    <p><b>Awesome Cart </b>was first launched in july,2020 by <b>Vardan Vishnoi</b> who is the final year student of the A.P.J.Abdul Kalam
+      Technical University,
+      Uttar Pradesh. The purpose of this site is not to do business, I am not here to selling you products but this site has approx all functionality which 
+      an ecommerce site should has.You can create your personal account,visit your personal profile,update your profile,add product to your cart,
+      search by their product name, category,subcategory and also by their description. And it also has an awesome feature that is to track your order 
+      through order id which we will provide you when you will order.<b>To check the payment gateway </b>there is no need to pay amount from your bank 
+      account you can use the <b>test credentials of paytm.</b> And finally I am glad to telling you that this site also has a blog.  I will update it 
+      which will help the computer science engineering student to grow them. If you are an beginner then you can ask us any type of query and if you are 
+      an expert then you can me suggestion.
+    </p>
+    <p><a class="btn btn-primary btn-lg" href="{% url 'WINP'%}" role="button">Learn more &raquo;</a></p>
+  </div>
+</div>
+<div class="container">
+<div class="row">
+    <div class="col-lg-4 ceo">
+        <img class="var" src="/static/shop/vardan2.jpeg">
+        <h2>Vardan Vishnoi</h2>
+        <p>To be a part of an organization where I can fully utilize my skills in programming languages to make a significant contribution to the success 
+          of the employer, while at the same time pursuing my individual growth.</p>
+        <p><b>Python || Django || SQLite || HTML5 || CSS3 || JavaScript || C programming language</b></p>
+      </div>
+    <div class="col-lg-4 ceo">
+      <img class="var" src="/static/shop/vardan2.jpeg">
+      <h2>Vardan Vishnoi</h2>
+      <p>To be a part of an organization where I can fully utilize my skills in programming languages to make a significant contribution to the success 
+        of the employer, while at the same time pursuing my individual growth.</p>
+      <p><b>Python || Django || SQLite || HTML5 || CSS3 || JavaScript || C programming language</b></p>
+    </div>
+    <div class="col-lg-4 ceo">
+        <img class="var" src="/static/shop/vardan2.jpeg">
+        <h2>Vardan Vishnoi</h2>
+        <p>To be a part of an organization where I can fully utilize my skills in programming languages to make a significant contribution to the success 
+          of the employer, while at the same time pursuing my individual growth.</p>
+        <p><b>Python || Django || SQLite || HTML5 || CSS3 || JavaScript || C programming language</b></p>
+      </div>
+
+</div>
+</div>
+  {% endblock %}
+  {% block js %}
+  <script>
+    if (localStorage.getItem('cart') == null) {
+      var cart = {};
+    }
+    else {
+      cart = JSON.parse(localStorage.getItem('cart'));
+      console.log(cart);
+      cartcount(cart);
+
+    }
+    $('#popcart').popover();
+    function cartcount(cart) {
+      var count = 0;
+      for (var x in cart) {
+        var count = count + cart[x][0];
+      }
+      document.getElementById('cartcount').innerHTML = count;
+    }
+  </script>
+
+  {% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %} blog {% endblock %}
+{% block css %}
+body{
+    background-image: url('/static/shop/bg-img/bg-10.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 500px;
+    width: 1226px;
+    opacity: 1;
+    color: white;
+   
+}
+#sp{
+    diplay:none;
+    height:350px;
+    width:1200px;
+}
+h1{
+    word-spacing: 80px;
+}
+button{
+    border-radius: 20px;
+}
+#blog{
+    color:white;
+}
+{% endblock %}
+{% block userimage %}
+<img id="loginicon" src="/media/{{img}}">
+{% endblock %}
+{% block body %}
+<div class="container my-3">
+    <div id="sp">
+            <a href="{% url 'ShopHome' %}" class="mt-5"><button class="btn btn-primary mt-5">Back to HomePage</button></a>
+    </div>
+    <h1>Work in Progress..........</h1>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+    }
+    else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+        console.log(cart);
+        cartcount(cart);
+        
+    }
+    $('#popcart').popover();
+    function cartcount(cart) {
+        var count = 0;
+        for (var x in cart) {
+            var count = count + cart[x][0];
+        }
+        document.getElementById('cartcount').innerHTML = count;
+    }
+</script>
+
+{% endblock %}

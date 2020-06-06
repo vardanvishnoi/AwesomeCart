@@ -1,0 +1,149 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %}My Profile {% endblock %}
+{% block css %}
+.container{
+display:flex;
+justify-content:center;
+}
+#prfl{
+text-align:center;
+}
+.var{
+height:140px;
+width:140px;
+border-radius:50%;
+}
+.dt{
+    font-size:15px;
+}
+#edit{
+    text-decoration:none;
+}
+#edit1{
+    text-align:right;
+    margin-right:30px;
+}
+#edit:hover{
+    color:red;
+    margin-right:0px;
+    
+}
+.special{
+    color:#007bff;
+}
+#oldbtn,#sbmt{
+  display:none;
+}
+#newbtn{
+  height: auto;
+  color:#007bff;
+  width: 50px;
+  margin-left: 400px;
+}
+#newbtn:hover{
+  color:red;
+  cursor:pointer;
+}
+#upload{
+  height: auto;
+  color:#007bff;
+  width: 50px;
+  margin-left:16px;
+}
+#upload:hover{
+  color:red;
+  cursor:pointer;
+}
+{% endblock %}
+{% block userimage %}
+<img id="loginicon" src="/media/{{img}}">
+{% endblock %}
+{% block body %}
+<div class="container">
+    <div class="col-lg-10 mt-4" id="prfl">
+        <img class="var" src="/media/{{userinfo.userimage}}">
+        <div class="row">
+            <h6 id="newbtn" class="mt-2">Edit</h6>
+            <h6 id="upload" class="mt-2">Upload</h6>
+        </div>
+        
+        <form name="myform" action="{% url 'UploadImage' %}" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+          
+          <input id="oldbtn" type="file" name="image" required>
+          <input type="submit" id="sbmt">
+        </form>
+        <h2 class="special">{{request.user}}</h2>
+        <div id="edit1"><a href="{% url 'EditInfo' %}" id="edit"><i class="fas fa-pencil-alt"></i></a></div>
+        <ul class="list-group">
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  UserName
+                  <span class="badge dt ">{{request.user}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  First Name
+                  <span class="badge dt">{{request.user.first_name}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Last Name
+                  <span class="badge dt">{{request.user.last_name}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Email
+                  <span class="badge dt">{{request.user.email}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Phone Number
+                  <span class="badge dt">{{userinfo.phone}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Address
+                  <span class="badge dt">{{userinfo.add}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  State
+                  <span class="badge dt">{{userinfo.state}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  City
+                  <span class="badge dt">{{userinfo.city}}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  Pin
+                  <span class="badge dt">{{userinfo.pin}}</span>
+                </li>
+                
+              </ul>
+    </div><!-- /.col-lg-4 -->
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};        
+    }
+    else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+        console.log(cart);
+        cartcount(cart);
+
+    }    
+    $('#popcart').popover();
+    function cartcount(cart) {
+        var count = 0;
+        for (var x in cart) {
+            var count = count + cart[x][0];
+        }
+        document.getElementById('cartcount').innerHTML = count;
+    }
+    $('#newbtn').bind("click" , function () {
+        $('#oldbtn').click();
+    });
+    $('#upload').bind("click" , function () {
+        $('#sbmt').click();
+    });
+    document.getElementById("myform").submit();
+</script>
+
+{% endblock %}

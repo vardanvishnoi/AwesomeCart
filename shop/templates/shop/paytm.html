@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Processing...
+    </title>
+    <link rel="icon" id="ttl" href="/static/shop/icons/title.png">
+</head>
+
+<body>
+    <h3>Redirecting you to merchant</h3><br>
+    <h3>Please Don't Refresh your page</h3>
+    <form action="https://securegw-stage.paytm.in/order/process" method="POST" name="paytm">
+        {% for key,value in paytm_dict.items %}
+        <input type="hidden" name="{{key}}" value="{{value}}">
+        {% endfor %}
+        <button class="btn btn-primary">Click Here</button>
+    </form>
+
+</body>
+<!-- <script>
+    document.paytm.submit
+</script> -->
+
+</html>

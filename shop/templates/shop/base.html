@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="icon" id="ttl" href="/static/shop/icons/title.png">
+    <style>
+        #ttl{
+            border-radius:50%;
+        }
+        #gap{
+            height:50px;
+        }
+         #footer{
+            background-color:#232F3E; 
+            height:auto;
+            width:100%;
+            position: relative;
+        }
+        #socialmediaicons{
+            display:flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .icon{
+            background-color:blanchedalmond;
+            margin:20px 25px;
+            width:60px;
+            height:60px;
+            border-radius: 30px; 
+            text-align:center; 
+            line-height: 74px;  
+        } 
+        .fa-facebook{
+            color:#e84394;
+        }
+        .fa-instagram{
+            color:#3f729b;
+        }
+        .fa-twitter{
+            color: #00acee;
+        }
+        .fa-youtube{
+            color:#c4302b ;
+        }
+        .fa-linkedin{
+            color:#0e76a8;
+        }
+        .isd{
+            background-color: #232F3F;
+            height:auto;
+            width:100%;
+            /* text-align: center; */
+            color:white;
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:12px;
+            /* margin-left: 1px; */
+        }
+        .list{
+            list-style: none;
+        }
+        .listh{
+            font-family:Arial, Helvetica, sans-serif;
+            font-size:15px;
+        }
+        #cpywrt{
+            background-color: #232F3F;
+            height:30px;
+            width:100%;
+            color:white;
+            text-align:center;
+        }
+        #cartcount{
+            font-size:20px;
+        }
+        #popcart:hover #cartcount{
+            transform: scale(1.5);
+        }
+        #backtotop{
+            background-color: #0275d8;
+            display:none;
+            height:55px;
+            width:55px;
+            position: fixed;
+            bottom:15px;
+            right:15px;
+            z-index:100;
+            color:white;
+            line-height: 62px;
+            text-align:center;
+            text-decoration: none;
+            border-radius: 50%;
+            font-size:10px;
+        }
+        #dngr{
+            color:red;
+            font-weight:bold;
+        }
+        #dngr1{
+            color:red;
+            font-weight:bold;
+        }
+        #loginicon{
+            height:20px;
+            width:20px;
+            border-radius: 50%;
+            margin-left:4px;
+        }
+        #showusername{
+            color:white;
+            margin-top: 5px;
+        }
+        .fln{
+            text-decoration: none;
+            color:white;
+        }
+        .fln:hover{
+            color:#007bff;
+            text-decoration: none;
+        }
+        {% block css %}{% endblock %}   
+    </style>
+    <!-- Font Awesome CDN -->
+    <script src="https://kit.fontawesome.com/6e57e71c20.js" crossorigin="anonymous"></script>
+    {% block headerjs %}{% endblock %}
+</head>
+
+<body>
+    <a href="" id="backtotop"><i class="fas fa-2x fa-arrow-up"></i></a>
+    <!-- NAVBAR START HERE -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
+        <a class="navbar-brand" href="{% url 'ShopHome' %}">AwesomeCart</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto links">
+                <li class="nav-item">
+                    <a class="nav-link" id="home" href="{% url 'ShopHome' %}">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                        <a class="nav-link about" id="about" href="{% url 'AboutUs' %}">AboutUs</a>
+                </li>
+                <li class="nav-item">
+                        <a class="nav-link track" id="tracker" href="{% url 'TrackingStatus' %}">Tracker</a>
+                </li>
+                <li class="nav-item">
+                        <a class="nav-link contact" id="contact" href="{% url 'ContactUs' %}">ContactUs</a>
+                </li>
+        
+                <li class="nav-item">
+                        <a class="nav-link" id="blog" href="{% url 'BLOG' %}">blog</a>
+                </li>
+            </ul>
+            
+           
+            <form class="form-inline my-2 my-lg-0" action="{% url 'Search' %}" method="GET">
+                <input class="form-control mr-sm-2" type="text" placeholder="Search Here" aria-label="Search" name="search" required>
+                <button class="btn btn-primary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+            <button id="popcart" type="button" class="btn btn-dark mx-2" data-container="body" data-toggle="popover" data-placement="bottom" data-content="Vivamus                1111111
+            sagittis lacus vel augue laoreet rutrum faucibus." data-html="true">                   
+            <i class="fas fa-shopping-cart" id="carticon"></i><span id="cartcount" class="ml-1">0</span>
+            </button>
+        
+            {% if user.is_authenticated %}
+                <h6 id="showusername">Hi {{request.user.first_name}}</h6>
+                <ul class="navbar-nav">
+                    <li class="nav-item dropleft">
+                        <a class="nav-link " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                              {% block userimage %} {% endblock %}
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                          <a class="dropdown-item" href="{% url 'MyProfile' %}">My Profile</a>
+                          <a class="dropdown-item " href="{% url 'LogOut' %}">Log Out</a>
+                        </div>
+                    </li>
+                </ul>
+               
+            {% else %}
+            <!-- Button to trigger Login modal -->
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#loginModal">
+                    Login
+            </button>
+            <!-- Button to trigger Sign Up modal -->
+            <button type="button" class="btn btn-primary ml-2" data-toggle="modal" data-target="#signupModal">
+                Sign Up
+            </button>
+            {% endif %}
+            <!-- Login Modal -->
+            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="loginModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                                <form name="myform1" action="{% url 'LogIn' %}" method="POST" onsubmit="return validation1()">
+                                        {% csrf_token %}
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label>UserName</label>
+                                                <input type="text" class="form-control" name="username1" id="username1" placeholder="User Name" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label>Password</label>
+                                                <input type="password" class="form-control" name="password1" id="password1" placeholder="Password" required>
+                                            </div>
+                                        </div>            
+                                        <button type="submit" id="submit1" class="btn btn-primary my-1">Login</button>
+                                </form>
+                        </div>
+                        <div class="modal-footer">
+                                <span class="mr-auto" id="dngr1"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+            <!-- Sign Up Modal -->
+            <div class="modal fade" id="signupModal" tabindex="-1" role="dialog" aria-labelledby="signupModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="signupModalLabel">Create Account</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                                <form name="myform" action="{% url 'SignUp' %}" method="POST" onsubmit="return validation()"> 
+                                        {% csrf_token %}
+                        
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label>First Name</label>
+                                                <input type="text" class="form-control" name="fname" id="fname" placeholder="First Name" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label>Last Name</label>
+                                                <input type="text" class="form-control" name="lname" id="lname" placeholder="Last Name" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                                <div class="form-group col-md-12">
+                                                    <label>User Name</label>
+                                                    <input type="text" class="form-control" name="username" id="username" placeholder="Choose Unique User Name" required>
+                                                </div>
+                                            </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label>Email</label>
+                                                <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label>Password</label>
+                                                <input type="password" class="form-control" name="password" id="password" placeholder="Choose Password" required>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <label>Confirm Password</label>
+                                                <input type="password" class="form-control" name="confirmpassword" id="confirmpassword" placeholder="Enter Your Password Again" required>
+                                            </div>
+                                        </div>
+                                        <button type="submit" id="submit" class="btn btn-primary my-1">Create Account</button>
+                                </form>                                   
+                        </div>
+                        <div class="modal-footer">
+                                <span class="mr-auto" id="dngr"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}} alert-dismissible fade show mb-0" role="alert">
+        <strong>Message::-</strong> {{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <!-- NAVBAR END HERE -->
+    {% block body %}{% endblock %}
+    <div id="gap">
+
+    </div>
+    <!-- FOOTER START HERE -->
+    <div class="container-fluid" id="footer">
+        <div class="container" id="socialmediaicons">
+                <a href="https://www.facebook.com/vardan.vishnoi.5" target="_blank" class="icon"><i class="fa fa-2x fa-facebook-f"></i></a>
+                <a href="https://twitter.com/VardanVishnoi" target="_blank" class="icon"><i class="fa fa-2x fa-twitter"></i></a>
+                <a href="https://www.instagram.com/vardanvishnoi" target="_blank" class="icon"><i class="fa fa-2x fa-instagram"></i></a>
+                <a href="https://www.youtube.com/channel/UCCLIMwsKKlfNDj0ruhQSJ-w?view_as=subscriber" target="_blank" class="icon"><i class="fa fa-2x fa-youtube"></i></a>
+                <a href="https://www.linkedin.com/in/vardan1998/" target="_blank" class="icon"><i class="fa fa-2x fa-linkedin"></i></a>
+                
+        </div>
+        <div class="conteainer">
+            <div class="row mt-3">
+                <div class="col-xl-4 col-md-4 isd">
+                    <div class="ml-5">
+                        <ul class="list ml-5 my-5">
+                                <li class="listh ml-5">Get to Know US</li>
+                                <a href="{% url 'WINP' %}" class="fln"><li class="my-3 ml-5">Terms & Conditions</li></a>
+                                <a href="{% url 'WINP' %}" class="fln"><li class="my-3 ml-5">Privacy Policies</li></a>
+                                <a href="{% url 'AboutUs' %}" class="fln"><li class="my-3 ml-5">About US</li></a>
+                                <a href="{% url 'ContactUs' %}" class="fln"><li class="my-3 ml-5">Contact US</li></a>
+                                
+                            </ul>  
+                        </div>
+                </div>
+                <div class="col-xl-4 col-md-4 isd">   
+                    <div class="ml-5">              
+                        <ul class="list my-5">
+                                <li class="listh ml-5">Let Us Help You</li>
+                                <a href="{% url 'WINP' %}" class="fln"><li class="my-3 ml-5">Shipping</li></a>
+                                <a href="{% url 'WINP' %}" class="fln"><li class="my-3 ml-5">Return Policies</li></a>
+                                <a href="{% url 'WINP' %}" class="fln"><li class="my-3 ml-5">Payment Protection</li></a>
+                                <a href="{% url 'WINP' %}" class="fln"><li class="my-3 ml-5">FAQ</li></a>
+                            </ul>  
+                        </div>
+                </div>
+                <div class="col-xl-4 col-md-4 isd">
+                        <ul class="list mr-5 my-5">
+                                <li class="listh ml-5">Collaborate With US</li>
+                                <a href="{% url 'WINP' %}" class="fln"><li class="my-3 ml-5">AwesomeCart Ambassador</li></a>
+                                <a href="{% url 'WINP' %}" class="fln"><li class="my-3 ml-5">Short Videos</li></a>
+                                <a href="{% url 'WINP' %}" class="fln"><li class="my-3 ml-5">Business Partnerships</li></a>
+                                <a href="{% url 'WINP' %}" class="fln"><li class="my-3 ml-5">Careers</li></a>
+                            </ul>  
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="cpywrt">
+            <i class="fa fa-copyright"></i> 2020 AwesomeCart
+        </div>
+    
+    <!-- FOOTER END HERE -->
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+        <script>
+        $('#popcart').click(function(){
+            $('#popcart').popover('disable');
+        });
+
+
+        $(window).scroll(function(){
+                if($(window).scrollTop()>800)
+                {
+                    $('#backtotop').show();
+                }
+                else{
+                    $('#backtotop').hide();
+                }
+        });
+        function validation() {
+        var result = true;
+        fname = document.forms["myform"]["fname"].value;
+        lname = document.forms["myform"]["lname"].value;
+        username = document.forms["myform"]["username"].value;
+        email = document.forms["myform"]["email"].value;
+        password = document.forms["myform"]["password"].value;
+        confirmpassword = document.forms["myform"]["confirmpassword"].value;
+        if (fname.length < 2 ||lname.length < 2) 
+        {
+            document.getElementById("dngr").innerHTML = "Please Enter Name having atleast 2 character";
+            result = false;
+        }
+        else
+        {
+            if (username.length < 6 || username.length > 20) 
+            {
+                document.getElementById("dngr").innerHTML = "Please Enter a username having atleast 6-20 character";
+                result = false;
+
+            }
+            else 
+            {
+                c1 = 0;
+                for (i = 0; i < username.length; i++) {
+                    if (username[i] == "_" || (username.charCodeAt(i) > 64 && username.charCodeAt(i) < 91) || (username.charCodeAt(i) > 96 && username.charCodeAt(i) < 123) || (username.charCodeAt(i) > 47 && username.charCodeAt(i) < 58)) 
+                    {
+                        c1++;
+                    }
+                    else 
+                    {
+                        document.getElementById("dngr").innerHTML = "Please Enter a valid user name for example Raghu_01";
+                        result = false;
+                    }
+                }
+                if (c1 == username.length) 
+                {
+                    if (password.length < 8) 
+                    {
+                        document.getElementById("dngr").innerHTML = "Please Choose a Password of atleast 8 character";
+                        result = false;
+                    }
+                    else 
+                    {
+                        if (password != confirmpassword) 
+                        {
+                            document.getElementById("dngr").innerHTML = "Your Password And Confirm Password doesn't match";
+                            result = false;
+                        }
+                        else 
+                        {
+                            a = email.indexOf("@");
+                            b = email.indexOf(".");
+                            c = countoccurance(email);
+                            if (c != 1 || (b - a < 3) || (email.length - b < 2) || (email.slice(b + 1) != "com" && email.slice(b + 1) != "in")) 
+                            {
+                                document.getElementById("dngr").innerHTML = "Enter a valid Email for Example Raghu@gmail.com";
+                                result = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    function validation1()
+    {
+        var result=true;
+        username = document.forms["myform1"]["username1"].value;
+        password = document.forms["myform1"]["password1"].value;
+        if (username.length < 6 || username.length > 20) 
+            {
+                document.getElementById("dngr1").innerHTML = "Invalid Username";
+                result = false;
+
+            }
+            else 
+            {
+                c1 = 0;
+                for (i = 0; i < username.length; i++) {
+                    if (username[i] == "_" || (username.charCodeAt(i) > 64 && username.charCodeAt(i) < 91) || (username.charCodeAt(i) > 96 && username.charCodeAt(i) < 123) || (username.charCodeAt(i) > 47 && username.charCodeAt(i) < 58)) 
+                    {
+                        c1++;
+                    }
+                    else 
+                    {
+                        document.getElementById("dngr1").innerHTML = "Invalid Username";
+                        result = false;
+                    }
+                }
+                if (c1 == username.length) 
+                {
+                    if (password.length < 8) 
+                    {
+                        document.getElementById("dngr1").innerHTML = "Invalid Password";
+                        result = false;
+                    }
+                }
+            }
+            return result;
+    }
+    function countoccurance(str) {
+        i = 0;
+        c = 0;
+        for (i = 0; i < str.length; i++) {
+            if (str[i] == ".") {
+                c++;
+            }
+        }
+        return c;
+    }
+        </script>
+    
+        {% block js %}{% endblock %}
+</body>
+
+</html>

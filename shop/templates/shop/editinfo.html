@@ -1,0 +1,221 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %}Update Your Details {% endblock %}
+{% block css %}
+#dngredit{
+    color:red;
+    font-weight:bold;
+}
+
+{% endblock %}
+{% block userimage %}
+<img id="loginicon" src="/media/{{img}}">
+{% endblock %}
+{% block body %}
+<div class="container">
+        <din class="col">
+                <h4>Update Details</h4>
+                <span id="dngredit"></span>
+                <form name="myeditform" action="{% url 'EditInfo' %}" method="POST" onsubmit="return validationinfo()">
+                {% csrf_token %}
+                    <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label >First Name*</label>
+                                <input type="text" class="form-control" name="editfname" placeholder="Update First Name" value="{{request.user.first_name}}" required>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label >Last Name*</label>
+                                <input type="text" class="form-control" name="editlname" placeholder="Update Last Name" value="{{request.user.last_name}}" required>
+                            </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label >UserName*</label>
+                            <input type="text" class="form-control" name="editusername" placeholder="Update User Name" value="{{request.user.username}}" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label >Email*</label>
+                            <input type="email" class="form-control" name="editemail" placeholder="Update Your Email" value="{{request.user.email}}" required>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label >Phone</label>
+                            <input type="text" class="form-control" name="editphone" placeholder="Update Phone Number" value="{{userdt.phone}}">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group col-md-6">
+                            <label >Address</label>
+                            <input type="text" class="form-control" name="editadd1" placeholder="Update Address" value="{{userdt.add}}">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label >Address 2</label>
+                            <input type="text" class="form-control" name="editadd2" placeholder="Update Apartment, studio, or floor">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        
+                        <div class="form-group col-md-5">
+                            <label >State</label>
+                            <select id="inputState" name="editstate" class="form-control" value="{{userdt.state}}">
+                                <option selected><b>{{userdt.state}}</b></option>
+                                <option>Andhra Pradesh</option><option>Arunachal Pradesh</option><option>Assam</option><option>Bihar</option><option>Chhattisgarh</option>
+                                <option>Goa</option><option>Gujarat</option><option>Haryana</option><option>Himachal Pradesh</option><option>Jharkhand</option>
+                                <option>Karnataka</option><option>Kerala</option><option>Madhya Pradesh</option><option>Maharashtra</option><option>Manipur</option>
+                                <option>Meghalaya</option><option>Mizoram</option><option>Nagaland</option><option>Odisha</option><option>Punjab</option>
+                                <option>Rajasthan</option><option>Sikkim</option><option>Tamil Nadu</option><option>Telangana</option><option>Tripura</option>
+                                <option>Uttar Pradesh</option><option>Uttarakhand</option><option>West Bengal</option><option>Andaman and Nicobar Islands</option>
+                                <option>Chandigarh</option>Dadra and Nagar Haveli and Daman and Diu<option>Delhi</option><option>Jammu and Kashmir</option>
+                                <option>Ladakh</option><option>Lakshadweep</option><option>Puducherry</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-5">
+                                <label >City</label>
+                                <input type="text" class="form-control" name="editcity" placeholder="Update Your City" value="{{userdt.city}}">
+                            </div>
+                        <div class="form-group col-md-2">
+                            <label >Pin-Code</label>
+                            <input type="text" class="form-control" name="editpin" placeholder="Update Pin-Code" value="{{userdt.pin}}">
+                        </div>
+                    </div>
+                    <button type="submit" id="editsubmit" class="btn btn-primary">Update</button>
+                </form>
+            </din>
+</div>
+{% endblock %}
+{% block js %}
+<script>
+    function validationinfo()
+    {
+        var result = true;
+        fname = document.forms["myeditform"]["editfname"].value;
+        lname = document.forms["myeditform"]["editlname"].value;
+        username = document.forms["myeditform"]["editusername"].value;
+        email = document.forms["myeditform"]["editemail"].value;
+        phone = document.forms["myeditform"]["editphone"].value;
+        add1 = document.forms["myeditform"]["editadd1"].value;
+        add2 = document.forms["myeditform"]["editadd2"].value;
+        state = document.forms["myeditform"]["editstate"].value;
+        city = document.forms["myeditform"]["editcity"].value;
+        pin = document.forms["myeditform"]["editpin"].value;
+        if(fname.length<2 || lname.length<2)
+        {
+            document.getElementById("dngredit").innerHTML = "Please Enter first name and last name having more than 2 character";
+            result=false;
+        }
+        else
+        {
+            if (username.length < 6 || username.length > 20) {
+                document.getElementById("dngredit").innerHTML = "Please Enter a username having atleast 6-20 character";
+                result = false;
+            }
+            else{
+                c1 = 0;
+                    for (i = 0; i < username.length; i++) {
+                        if (username[i] == "_" || (username.charCodeAt(i) > 64 && username.charCodeAt(i) < 91) || (username.charCodeAt(i) > 96 && username.charCodeAt(i) < 123) || (username.charCodeAt(i) > 47 && username.charCodeAt(i) < 58)) {
+                            c1++;
+                        }
+                        else {
+                            document.getElementById("dngredit").innerHTML = "Please Enter a valid user name for example Raghu_01";
+                            result = false;
+                        }
+                    }
+            }
+        }
+        
+               
+        if(email.length!=0)
+            {
+                a = email.indexOf("@");
+                b = email.indexOf(".");
+                c = countoccurance(email);
+                if (c != 1 || (b - a < 3) || (email.length - b < 2) || (email.slice(b + 1) != "com" && email.slice(b + 1) != "in")) {
+                document.getElementById("dngredit").innerHTML = "Enter a valid Email for Example Raghu@gmail.com";
+                result = false;
+                }
+            }
+                    
+                   
+        if(phone.length!=0)
+            {
+                if (phone.length != 10 || phone[0] < 6) {
+                document.getElementById("dngredit").innerHTML = "Please enter right phone number";
+                result = false;
+                }
+                else {
+                    c2 = 0;
+                    for (i = 0; i < phone.length; i++) {
+                    if (phone.charCodeAt(i) > 47 && phone.charCodeAt(i) < 58) {
+                        c2++;
+                    }
+                    else {                
+                        document.getElementById("dngredit").innerHTML = "Please enter only digits for phone number";                        
+                        result = false;
+                        break;
+                        }
+                    }
+                    }
+            }
+         if(city.length!=0)
+         {
+             for(i=0;i<city.length;i++)
+             {
+                if (city.charCodeAt(i)<65|| city.charCodeAt(i)>122 ||(city.charCodeAt(i)>90 && city.charCodeAt(i)<97)) {
+                        document.getElementById("dngredit").innerHTML = "Please enter only Character for City";                        
+                        result = false;
+                        break;
+                        }
+             }
+         }
+         if (pin.length!=0)
+            {
+                if (pin.length != 6) {
+                    document.getElementById("dngredit").innerHTML = "Please Enter 6 digit pin-code";                
+                    result = false;
+                }
+                else {
+                    c3 = 0;
+                    for (i = 0; i < pin.length; i++) {
+                        if (pin.charCodeAt(i) > 47 && pin.charCodeAt(i) < 58) {
+                            c3++;
+                        }
+                        else {
+                            document.getElementById("dngredit").innerHTML = "Please enter only digits for pin-code";                           
+                            result = false;
+                            break;
+                        }
+                        }
+                }
+            }        
+        return result;
+    
+    }
+    function countoccurance(str) {
+        i = 0;
+        c = 0;
+        for (i = 0; i < str.length; i++) {
+            if (str[i] == ".") {
+                c++;
+            }
+        }
+        return c;
+    }
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+    }
+    else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+        cartcount(cart);
+
+    }
+    $('#popcart').popover();
+    function cartcount(cart) {
+        var count = 0;
+        for (var x in cart) {
+            var count = count + cart[x][0];
+        }
+        document.getElementById('cartcount').innerHTML = count;
+    }
+    
+</script>
+
+{% endblock %}

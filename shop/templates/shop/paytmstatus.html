@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+
+<head>
+    <title>
+        Payment Status
+    </title>
+    <style>
+        body{
+            margin:0px;
+        }
+        #bg {
+            background-image: url('/static/shop/bg-img/bg-10.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 600px;
+            width: 1226px;
+            opacity: 0.8;
+            color: white;
+            margin-top: -4px;
+        }
+
+        #successmsg {
+            padding-top: 40px;
+            padding-left: 40px;
+        }
+
+        #space {
+            height: 350px;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        #thanks {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            font-family: arial;
+            bottom: 10px;
+            word-spacing: 100px;
+            padding: 0px;
+            margin: 0;
+        }
+
+        #gap {
+            height: 0px;
+        }
+        button{
+            margin-left: 38px;
+            background-color:#007bff;
+            border-color: #007bff;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid" id="bg">
+        <div id="successmsg">
+            {% if response.RESPCODE == '01' %}
+            <h2>ORDER SUCCESS</h2>
+            <h4>Your Order Id is <b>{{response.ORDERID}}</b>. Use It to Track Your Order</h4>
+            {% else %}
+            {% endif %}
+        </div>
+        <div id="space">
+            <a href="{% url 'ShopHome' %}"><button class="btn btn-primary">Back to Home Page</button></a>
+        </div>
+        <div id="thanks">
+            <b>Thanks For Shopping With Us</b>
+        </div>
+
+    </div>
+    <script>
+        if ({{ ind }} == 1)
+        {
+            localStorage.clear()
+        }
+    </script>
+
+</body>
+
+</html>

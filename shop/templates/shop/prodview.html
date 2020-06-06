@@ -1,0 +1,191 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %} {{product.product_name}} {% endblock %}
+{% block css %}
+.msz{
+height:37px;
+}
+#comments{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+#commentsh{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:blue;
+}
+{% endblock %}
+{% block headerjs %}
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v7.0"></script>
+{% endblock %}
+{% block userimage %}
+<img id="loginicon" src="/media/{{img}}">
+{% endblock %}
+{% block body %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="row">
+                <img src="/media/{{product.image}}" width="250px" height="250px">
+            </div>
+            <div class="row">
+                <button class="btn btn-primary mx-3 my-3 msz buy">Buy Now</button>
+                <button class="cart btn btn-primary my-3 msz" id="pr{{product.id}}">Add To Cart</button>
+            </div>
+            
+        </div>
+        <div class="col-md-8 my-2">
+            <div class="row ">
+                <h5 text="blue" id="namepr{{product.id}}" class="mx-3">{{product.product_name}}</h5>
+                <div class="fb-like" data-href="http://127.0.0.1:8000/shop/productview/{{product.id}}" data-width="" data-layout="standard" data-action="like" data-size="small" data-share="true"></div>
+            </div>
+            <h5><b>Rs.</b><span id="pricepr{{product.id}}">{{product.price}}</span>/-</h5>
+            <hr text-color="black">
+            <p> {{product.desc}}<br>
+                Cashback: Flat Rs.50 back on minimum order of Rs.50 using Amazon Pay UPI. For Android App customers
+                only. Applicable on 1st
+                ever transaction on Amazon Pay UPI. Cashback within 5 days. Set up Amazon Pay UPI Here's how <br>
+                No Cost EMI: Avail No Cost EMI on select cards for orders above ₹3000 Here's how<br>
+                Bank Offer (3): Get 10% cashback up to Rs. 500 on a minimum purchase of Rs 2000 with HDFC Bank Debit
+                Cards Here's how <br>
+                Get 5% up to Rs. 1000 Instant Discount on Axis Bank Credit EMI transactions and 10% up to Rs. 1500
+                Instant discount on Axis Debit EMI transactions. Here's how
+                5% Instant discount with HSBC Cashback card Here's how <br>
+                Partner Offers (1): Get GST invoice and save up to 28% on business purchases. Sign up for free Here's
+                how
+
+            </p>
+        </div>
+    </div>
+</div>
+<h6 id="commentsh">Share your experience of this product here</h6>
+<div id="comments" class="fb-comments" data-href="http://127.0.0.1:8000/shop/productview/{{product.id}}" data-numposts="5" data-width=""></div>
+{% endblock %}
+{% block js %}
+<script>
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};
+    }
+    else {
+        cart = JSON.parse(localStorage.getItem('cart'));
+        updatecart(cart);
+    }
+    $('#popcart').click(function () {
+       
+        updatepopover(cart);
+        document.getElementById('C1').innerHTML = "<a href='/shop/checkout'><button class='btn btn-primary mx-2 my-2'> CheckOut</button></a>";
+        document.getElementById('C2').innerHTML = "<button class='btn btn-primary my-2 mx-2' onclick='clearcart(cart)'> ClearCart</button>";
+        $('#popcart').popover();
+    });
+    function updatecart(cart) {
+        cartcount(cart);
+        idstr = "pr" + {{ product.id }};
+    updatepopover(cart);
+    document.getElementById('C1').innerHTML = "<a href='/shop/checkout'><button class='btn btn-primary mx-2 my-2'> CheckOut</button></a>";
+    document.getElementById('C2').innerHTML = "<button class='btn btn-primary my-2 mx-2' onclick='clearcart(cart)'> ClearCart</button>";
+    if (cart[idstr] != undefined) {
+        document.getElementById(idstr).outerHTML = "<button onclick='minus(this.id)' id='minus" + idstr + "'class='btn btn-primary minus msz my-3'>-</button><b id='val" + idstr + "' class='mx-2 msz my-4'>" + cart[idstr][0] + "</b><button onclick='plus(this.id)' id='plus" + idstr + "'class='btn btn-primary plus msz my-3'>+</button>";
+    }
+    }
+
+    $('.cart').click(function () {
+        var idstr = this.id.toString();
+        if (cart[idstr] == undefined) {
+            name = document.getElementById('name' + idstr).innerHTML;
+            qty = 1;
+            price = parseInt(document.getElementById('price' + idstr).innerHTML);
+            cart[idstr] = [qty, name, price];
+        }
+        cartcount(cart);
+        updatepopover(cart);
+        document.getElementById('C1').innerHTML = "<a href='/shop/checkout'><button class='btn btn-primary mx-2 my-2'> CheckOut</button></a>";
+        document.getElementById('C2').innerHTML = "<button class='btn btn-primary my-2 mx-2' onclick='clearcart(cart)'> ClearCart</button>";
+        document.getElementById(idstr).outerHTML = "<button onclick='minus(this.id)' id='minus" + idstr + "'class='btn btn-primary minus msz my-3'>-</button><b id='val" + idstr + "' class='mx-2 msz my-4'>" + cart[idstr][0] + "</b><button onclick='plus(this.id)' id='plus" + idstr + "'class='btn btn-primary plus msz my-3'>+</button>";
+
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+    });
+
+    function cartcount(cart) {
+        var count = 0;
+        for (var x in cart) {
+            var count = count + cart[x][0];
+        }
+        document.getElementById('cartcount').innerHTML = count;
+    }
+
+    function minus(a) {        
+        var b = a.slice(5);    
+        if (cart[b][0] > 0) 
+        {
+            cart[b][0] = cart[b][0] - 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            document.getElementById("val" + b).innerHTML = "<b>" + cart[b][0] + "</b>";
+            cartcount(cart);            
+            updatepopover(cart);
+            document.getElementById('C1').innerHTML = "<a href='/shop/checkout'><button class='btn btn-primary mx-2 my-2'> CheckOut</button></a>";
+            document.getElementById('C2').innerHTML = "<button class='btn btn-primary my-2 mx-2' onclick='clearcart(cart)'> ClearCart</button>";
+            if(cart[b][0]==0)
+            {
+                delete cart[b]
+                localStorage.setItem('cart', JSON.stringify(cart));
+                if (Object.keys(cart).length==0)
+                {
+                    localStorage.clear();
+                }  
+                location.reload();
+            }
+        }
+    };
+    function plus(a) {
+        var b = a.slice(4);    
+        cart[b][0] = cart[b][0] + 1;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        document.getElementById("val" + b).innerHTML = "<b>" + cart[b][0] + "</b>";
+        cartcount(cart);
+        updatepopover(cart);
+        document.getElementById('C1').innerHTML = "<a href='/shop/checkout'><button class='btn btn-primary mx-2 my-2'> CheckOut</button></a>";
+        document.getElementById('C2').innerHTML = "<button class='btn btn-primary my-2 mx-2' onclick='clearcart(cart)'> ClearCart</button>";
+    };
+
+    function updatepopover(cart) {        
+        var popcontent = "";
+        for (var x in cart) {
+            popcontent = popcontent + cart[x][1] + " -- " + cart[x][0] + "<br>";
+        }
+        popcontent = popcontent + "<a href='/shop/checkout' id='C1'>CheckOut</a><a href='#' id='C2'>ClearCart</a>";        
+        document.getElementById('popcart').setAttribute('data-content', popcontent);
+        $('#popcart').popover('show');
+    }
+    function clearcart(cart)
+     {        
+         localStorage.clear();
+         location.reload();
+     }
+     $('.buy').click(function(){            
+            var id="pr"+{{product.id}}           
+            if(cart[id]==undefined)
+            {
+                console.log("OK");
+                name=document.getElementById("name"+id).innerHTML;
+                console.log(name);
+                console.log("OK");
+                qty = 1;
+                price = parseInt(document.getElementById('price' + id).innerHTML);
+                console.log(price);
+                cart[id] = [qty, name, price];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                console.log(cart);
+                console.log("If Entered");
+            }
+            cartcount(cart);
+            updatepopover(cart);
+            document.getElementById('C1').innerHTML = "<a href='/shop/checkout'><button class='btn btn-primary mx-2 my-2'> CheckOut</button></a>";
+            document.getElementById('C2').innerHTML = "<button class='btn btn-primary my-2 mx-2' onclick='clearcart(cart)'> ClearCart</button>";
+           document.location="/shop/checkout";
+     });
+
+</script>
+{% endblock %}

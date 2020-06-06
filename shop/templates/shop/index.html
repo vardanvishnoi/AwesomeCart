@@ -1,0 +1,216 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %} AwesomeCart {% endblock %}
+{% block css %}
+.col-md-3 {
+display: inline-block;
+margin-left: -4px;
+}
+
+.carousel-indicators .active {
+background-color: blue;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+background-color: blue;
+}
+
+.col-md-3 img {
+width: 100%;
+height: 200px;
+}
+
+.carousel-control-prev,
+.carousel-control-next{
+top: auto;
+bottom: auto;
+padding-top: 200px;
+}
+
+#val{
+color:black;
+}
+.carousel-indicators li{
+    background-color: #7e7ead;
+}
+.carousel-indicators {
+    bottom: -17px;
+}
+#home{
+    color:white;
+}
+
+{% endblock %}
+
+{% block userimage %}
+<img id="loginicon" src="/media/{{img}}">
+{% endblock %}
+
+{% block body %}
+<!-- SLIDER//CAROUSEL START HERE -->
+<div class="container">
+    {% for products,nSlides,rs,cat in productallcategory %}
+    <h3 class="my-4">{{cat}}</h3>
+    <div class="row">
+        <div class="col carousel slide my-3" id="demo{{forloop.counter}}" data-ride="carousel">
+            <!-- INDICATORS START HERE -->
+            <ul class="carousel-indicators">
+                <li data-target="#demo{{forloop.counter}}" data-slide-to="0" class="active"></li>
+                {% for i in rs %}
+                <li data-target="#demo{{forloop.parentloop.counter}}" data-slide-to="{{i}}"></li>
+                {% endfor %}
+            </ul>
+            <!-- INDICATORS END HERE -->
+            <!-- SLide Show Start Here  -->
+            <div class="container carousel-inner no-padding">
+                <!-- SLIDE 1 START HERE -->
+                <div class="carousel-item active">
+                    <!-- SLIDE 1 CARD 1 START HERE -->
+                    {% for i in products %}
+                    <!--     i represent a single product which has 8 attributes -->
+                    <div class="col-xs-3 col-sm-3 col-md-3">
+                        <div class="card" style="width: 18rem;">
+                            <img src="/media/{{i.image}}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h6 class="card-title" id="namepr{{i.id}}">{{i.product_name}}</h6>
+                                <h6 >₹ <span id="pricepr{{i.id}}">{{i.price}}</span>/-</h6>
+                                <p class="card-text">{{i.desc}}</p>
+                                <button id="pr{{i.id}}" class="cart btn btn-primary">Add To Cart</button>
+                                <a href="/shop/productview/{{i.id}}"><button id="qv{{i.id}}"
+                                        class="btn btn-primary">Quick View</button></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% if forloop.counter|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+                </div>
+                <div class="carousel-item">
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <!-- SLIDE 1 END HERE -->
+            </div>
+            <!-- SLide Show End Here  -->
+        </div>
+        <!-- LEFT RIGHT CONTROL START HERE -->
+        <a href="#demo{{forloop.counter}}" data-slide="prev" class="carousel-control-prev">
+            <span class="carousel-control-prev-icon ml-0"></span>
+        </a>
+        <a href="#demo{{forloop.counter}}" data-slide="next" class="carousel-control-next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+        <!-- LEFT RIGHT CONTROL END HERE -->
+    </div>
+    {% endfor %}
+</div>
+<!-- SLIDER//CAROUSEL END HERE -->
+
+{% endblock %}
+{% block js %}
+<script>
+    if (localStorage.getItem('cart') == null) {
+        var cart = {};       
+    }
+    else {
+        cart = JSON.parse(localStorage.getItem('cart'));       
+        updatecart(cart);        
+    }
+    $('.cart').click(function () {
+        var idstr = this.id.toString();
+        if (cart[idstr] == undefined) {
+            name=document.getElementById('name'+idstr).innerHTML;
+            qty=1;
+            price=parseInt(document.getElementById('price'+idstr).innerHTML);
+            cart[idstr] = [qty,name,price];    
+        }
+        else {
+            cart[idstr] = cart[idstr] + 1;
+        }
+        cartcount(cart);
+        updatepopover(cart);
+        document.getElementById('C1').innerHTML="<a href='/shop/checkout'><button class='btn btn-primary mx-2 my-2'> CheckOut</button></a>";
+        document.getElementById('C2').innerHTML="<button class='btn btn-primary my-2 mx-2' onclick='clearcart(cart)'> ClearCart</button>";
+        document.getElementById(idstr).outerHTML = "<button onclick='minus(this.id)' id='minus" + idstr + "'class='btn btn-primary minus'>-</button><b id='val" + idstr + "' class='mx-2'>" + cart[idstr][0] + "</b><button onclick='plus(this.id)' id='plus" + idstr + "'class='btn btn-primary plus'>+</button>"
+        
+        localStorage.setItem('cart', JSON.stringify(cart));
+
+    });
+
+    function cartcount(cart) {
+        var count = 0;
+        for (var x in cart) {
+            var count = count + cart[x][0];
+        }
+        document.getElementById('cartcount').innerHTML = count;
+    }
+
+    function minus(a) {
+        var b = a.slice(5);
+        console.log(b);
+        if (cart[b][0] > 0) {
+            cart[b][0] = cart[b][0] - 1;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            document.getElementById("val" + b).innerHTML = "<b>" + cart[b][0] + "</b>";
+            cartcount(cart);
+            updatepopover(cart);
+            document.getElementById('C1').innerHTML="<a href='/shop/checkout'><button class='btn btn-primary mx-2 my-2'> CheckOut</button></a>";
+            document.getElementById('C2').innerHTML="<button class='btn btn-primary my-2 mx-2' onclick='clearcart(cart)'> ClearCart</button>";
+            if(cart[b][0]==0)
+            {
+                delete cart[b]
+                localStorage.setItem('cart', JSON.stringify(cart));
+                if (Object.keys(cart).length==0)
+                {
+                    localStorage.clear();
+                }  
+                location.reload();
+            }
+        }
+    };
+    function plus(a) {
+        var b = a.slice(4);
+        cart[b][0] = cart[b][0] + 1;
+        localStorage.setItem('cart', JSON.stringify(cart));
+        document.getElementById("val" + b).innerHTML = "<b>" + cart[b][0] + "</b>";
+        cartcount(cart);
+        updatepopover(cart);
+        document.getElementById('C1').innerHTML="<a href='/shop/checkout'><button class='btn btn-primary mx-2 my-2'> CheckOut</button></a>";
+        document.getElementById('C2').innerHTML="<button class='btn btn-primary my-2 mx-2' onclick='clearcart(cart)'> ClearCart</button>";
+    };
+
+    function updatecart(cart) {
+        cartcount(cart);
+        updatepopover(cart);
+        document.getElementById('C1').innerHTML="<a href='/shop/checkout'><button class='btn btn-primary mx-2 my-2'> CheckOut</button></a>";
+        document.getElementById('C2').innerHTML="<button class='btn btn-primary my-2 mx-2' onclick='clearcart(cart)'> ClearCart</button>";
+        for (var idstr in cart) {
+            document.getElementById(idstr).outerHTML ="<button onclick='minus(this.id)' id='minus" + idstr + "'class='btn btn-primary minus'>-</button><b id='val" + idstr + "' class='mx-2'>" + cart[idstr][0] + "</b><button onclick='plus(this.id)' id='plus" + idstr + "'class='btn btn-primary plus'>+</button>";
+        }
+    }
+
+    function updatepopover(cart) {        
+        var popcontent="";
+        for(var x in cart)
+        {
+            popcontent=popcontent+ document.getElementById("name"+x).innerHTML+" -- "+cart[x][0]+"<br>";
+        }      
+        popcontent=popcontent+"<a href='#' id='C1'>CheckOut</a><a href='#' id='C2'>ClearCart</a>";      
+        document.getElementById('popcart').setAttribute('data-content',popcontent);
+        $('#popcart').popover('show');       
+        document.getElementById('C1').innerHtml="<button class='btn btn-primary'>CheckOut</button>";
+        
+       
+    }
+     
+     function clearcart(cart)
+     {
+         localStorage.clear();
+         location.reload();
+     }
+
+</script>
+
+{% endblock %}
+
+
+<!-- CAROUSEL END HERE -->
